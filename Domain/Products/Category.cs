@@ -1,19 +1,42 @@
-﻿using IWantApp.Endpoints.Categories;
+﻿using Flunt.Validations;
 
 namespace IWantApp.Domain.Products;
 
 public class Category : Entity
 {
-    public string Name { get; set; }
-    public bool Active { get; set; } = true;
+    public string Name { get; private set; }
+    public bool Active { get; private set; }
 
-    internal object Select(Func<object, CategoryResponse> value)
+    public Category(string name, string createdBy, string editedBy)
     {
-        throw new NotImplementedException();
+        Name = name;
+        Active = true;
+        CreatedBy = createdBy;
+        EditedBy = editedBy;
+        CreatedOn = DateTime.Now;
+        EditedOn = DateTime.Now;
+
+        Validate();
     }
 
-    internal object Select(Guid id, object name, object active)
+    public void Validate()
     {
-        throw new NotImplementedException();
+        var contract = new Contract<Category>()
+            .IsNotNullOrEmpty(Name, "Name", "Nome é obrigatório")
+            .IsGreaterOrEqualsThan(Name, 3, "Name")
+            .IsNotNullOrEmpty(CreatedBy, "CreatedBy")
+            .IsNotNullOrEmpty(EditedBy, "EditedBy");
+        AddNotifications(contract);
     }
+
+    public void EditInfo(string name, bool active)
+    {
+        Active = active;
+        Name = name;
+        Validate();
+    }
+
 }
+
+
+
