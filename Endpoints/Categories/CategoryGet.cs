@@ -12,12 +12,10 @@ public class CategoryGet
 
     public static IResult Action([FromRoute] Guid Id, ApplicationDBContext context) {
 
-        var category = context.Categories.Where(c => c.Id == Id).FirstOrDefault().ToString();
+        var category = context.Categories.Where(c => c.Id == Id).FirstOrDefault();
 
         if (category == null)
-        {
             Results.NotFound();
-        }
 
         return Results.Ok(category);
     }
