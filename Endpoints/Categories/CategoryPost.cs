@@ -1,5 +1,6 @@
 ﻿using IWantApp.Domain.Products;
 using IWantApp.Infra.Data;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 
 namespace IWantApp.Endpoints.Categories;

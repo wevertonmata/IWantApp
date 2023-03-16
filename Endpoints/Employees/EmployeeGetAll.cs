@@ -2,6 +2,7 @@
 using IWantApp.Domain.Products;
 using IWantApp.Endpoints.Categories;
 using IWantApp.Infra.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -14,6 +15,7 @@ public class EmployeeGetAll{
     public static Delegate Handle => Action;
 
     // Dapper
+    [Authorize(Policy = "EmployeePolicy")]
     public static IResult Action([FromQuery] int? page, [FromQuery] int? rows, QueryAllUserWithClaimName query)
     {
         if (page == null)
