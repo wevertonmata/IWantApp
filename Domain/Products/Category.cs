@@ -19,24 +19,23 @@ public class Category : Entity
         Validate();
     }
 
-    public void Validate()
+    private void Validate()
     {
         var contract = new Contract<Category>()
-            .IsNotNullOrEmpty(Name, "Name", "Nome é obrigatório")
+            .IsNotNullOrEmpty(Name, "Name")
             .IsGreaterOrEqualsThan(Name, 3, "Name")
             .IsNotNullOrEmpty(CreatedBy, "CreatedBy")
             .IsNotNullOrEmpty(EditedBy, "EditedBy");
         AddNotifications(contract);
     }
 
-    public void EditInfo(string name, bool active)
+    public void EditInfo(string name, bool active, string editedBy)
     {
         Active = active;
         Name = name;
+        EditedBy = editedBy;
+        EditedOn = DateTime.Now;
+
         Validate();
     }
-
 }
-
-
-

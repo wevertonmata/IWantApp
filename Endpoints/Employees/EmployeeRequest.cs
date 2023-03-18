@@ -1,3 +1,3 @@
-﻿namespace IWantApp.Endpoints.Security;
+﻿namespace IWantApp.Endpoints.Employees;
 
-public record TokenRequest(string Email, string Password);
+public record EmployeeRequest(string Email, string Password, string Name, string EmployeeCode);
