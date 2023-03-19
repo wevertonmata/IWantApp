@@ -1,39 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Flunt.Notifications;
 using IWantApp.Domain.Products;
-using Flunt.Notifications;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace IWantApp.Infra.Data;
 
-public class ApplicationDBContext : IdentityDbContext<IdentityUser>
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
-
     public DbSet<Product> Products { get; set; }
-
     public DbSet<Category> Categories { get; set; }
 
-    public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
+        
         builder.Ignore<Notification>();
-
+        
         builder.Entity<Product>()
             .Property(p => p.Name).IsRequired();
         builder.Entity<Product>()
             .Property(p => p.Description).HasMaxLength(255);
 
         builder.Entity<Category>()
-               .Property(c => c.Name).IsRequired();
+            .Property(c => c.Name).IsRequired();
     }
 
-    protected override void ConfigureConventions(ModelConfigurationBuilder config)
+    protected override void ConfigureConventions(ModelConfigurationBuilder configuration)
     {
-        config.Properties<string>()
+        configuration.Properties<string>()
             .HaveMaxLength(100);
     }
 }
-

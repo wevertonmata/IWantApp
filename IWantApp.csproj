@@ -20,12 +20,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\wever\source\repos\IWantApp\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\wever\source\repos\IWantApp\.editorconfig" />
-  </ItemGroup>
-
 </Project>
