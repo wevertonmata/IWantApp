@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
-namespace IWantApp.Endpoints.Security;
+﻿namespace IWantApp.Endpoints.Security;
 
 public class TokenPost
 {
@@ -14,16 +7,22 @@ public class TokenPost
     public static Delegate Handle => Action; 
 
     [AllowAnonymous]
-    public static IResult Action(LoginRequest loginRequest, IConfiguration configuration, UserManager<IdentityUser> userManager, ILogger<TokenPost> log)
+    public static async Task<IResult> Action(
+        LoginRequest loginRequest, 
+        IConfiguration configuration, 
+        UserManager<IdentityUser> userManager, 
+        ILogger<TokenPost> log,
+        IWebHostEnvironment environment)
     {
-        log.LogInformation("Getting Token");
-        var user = userManager.FindByEmailAsync(loginRequest.Email).Result;
+        log.LogInformation("Getting token");
+
+        var user = await userManager.FindByEmailAsync(loginRequest.Email);
         if(user == null)
             Results.BadRequest();
-        if (!userManager.CheckPasswordAsync(user, loginRequest.Password).Result)
+        if (!await userManager.CheckPasswordAsync(user, loginRequest.Password))
             Results.BadRequest();
 
-        var claims = userManager.GetClaimsAsync(user).Result;
+        var claims = await userManager.GetClaimsAsync(user);
         var subject = new ClaimsIdentity(new Claim[]
         {
             new Claim(ClaimTypes.Email, loginRequest.Email),
@@ -40,7 +39,8 @@ public class TokenPost
                     new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             Audience = configuration["JwtBearerTokenSettings:Audience"],
             Issuer = configuration["JwtBearerTokenSettings:Issuer"],
-            Expires = DateTime.UtcNow.AddMinutes(2)
+            Expires = environment.IsDevelopment() || environment.IsStaging() ? 
+                DateTime.UtcNow.AddYears(1) : DateTime.UtcNow.AddMinutes(2)
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -1,7 +1,4 @@
-﻿using IWantApp.Infra.Data;
-using Microsoft.AspNetCore.Authorization;
-
-namespace IWantApp.Endpoints.Employees;
+﻿namespace IWantApp.Endpoints.Employees;
 
 public class EmployeeGetAll
 {
@@ -12,7 +9,7 @@ public class EmployeeGetAll
     [Authorize(Policy = "EmployeePolicy")]
     public static async Task<IResult> Action(int? page, int? rows, QueryAllUsersWithClaimName query)
     {
-        var results = await query.Execute(page.Value, rows.Value);
-        return  Results.Ok(results);
+        var result = await query.Execute(page.Value, rows.Value);
+        return Results.Ok(result);
     }
 }
